@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Music Analytics Dashboard</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="src/css/styles.css">
+    
+    <!-- D3.js v7 -->
+    <script src="src/lib/d3.v7.min.js"></script>
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <h1>Interactive Music Analytics Dashboard</h1>
+        <p class="subtitle">Cross-Platform Audio Feature Exploration</p>
+        <div class="controls">
+            <label for="color-mode">Color by:</label>
+            <select id="color-mode">
+                <option value="mode">Mode (Major/Minor)</option>
+                <option value="energy_%">Energy</option>
+                <option value="danceability_%">Danceability</option>
+                <option value="valence_%">Valence (Happiness)</option>
+                <option value="acousticness_%">Acousticness</option>
+                <option value="liveness_%">Liveness</option>
+                <option value="speechiness_%">Speechiness</option>
+            </select>
+
+            <!-- AÑADIR esto en la barra de controles, junto al dropdown de color -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="artist-search" 
+                        class="artist-search-input" 
+                        placeholder="Search artist..."
+                        autocomplete="off"
+                    />
+                    <button class="search-clear" id="search-clear" style="display:none">✕</button>
+                </div>
+                <!-- Dropdown de sugerencias -->
+                <div class="search-dropdown" id="search-dropdown" style="display:none">
+                    <div class="search-dropdown-list" id="search-dropdown-list"></div>
+                    <div class="search-dropdown-footer" id="search-results-count"></div>
+                </div>
+            </div>
+
+            <div class="filter-panel-trigger" id="filter-panel-trigger" style="position:relative">
+                <svg class="filter-trigger-icon" viewBox="0 0 24 24" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                Active Filters
+                <span class="filter-badge zero" id="filter-count-badge">0</span>
+
+                <!-- Dropdown lives INSIDE the trigger div for correct positioning -->
+                <div class="filter-panel-dropdown" id="filter-panel-dropdown">
+                    <div class="filter-panel-header">
+                        <span class="filter-panel-title">Active Filters</span>
+                        <button class="filter-clear-all" id="filter-clear-all">Clear all</button>
+                    </div>
+                    <div class="filter-panel-list" id="filter-panel-list"></div>
+                </div>
+            </div>
+                <!-- NUEVO: Mode Filter Buttons -->
+            <div id="mode-filter" style="display: none; margin-left: 15px;">
+                <button id="btn-major" class="mode-btn">Major</button>
+                <button id="btn-minor" class="mode-btn">Minor</button>
+                <button id="btn-both" class="mode-btn active">Both</button>
+            </div>
+            
+            <!-- NUEVO: Range Filter -->
+            <div id="range-filter" style="display: none; margin-left: 20px;">
+                <label id="range-label" style="font-size: 0.9em;">Range:</label>
+                <input type="range" id="range-min" min="0" max="100" value="0" style="width: 100px;">
+                <input type="range" id="range-max" min="0" max="100" value="100" style="width: 100px;">
+                <span id="range-values" style="font-family: monospace; font-weight: bold; color: #667eea;">0 - 100</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Left Panel: The Universe (60%) -->
+        <div class="panel left-panel">
+            <div class="panel-header">
+                <h2>The Universe</h2>
+                <p class="panel-description">Song clusters by audio features</p>
+            </div>
+            <div id="universe-view" class="view-container"></div>
+            <div class="panel-footer">
+                <span id="selection-count">All 953 songs selected</span>
+            </div>
+        </div>
+
+        <!-- Right Panel: Two views (40%) -->
+        <div class="panel right-panel">
+            <!-- Top: The Fingerprint -->
+            <div class="sub-panel">
+                <div class="panel-header">
+                    <h2>The Fingerprint</h2>
+                    <p class="panel-description">Average audio profile</p>
+                </div>
+                <div id="fingerprint-view" class="view-container"></div>
+            </div>
+
+            <!-- Bottom: The Battleground -->
+            <div class="sub-panel">
+                <div class="panel-header">
+                    <h2>The Battleground</h2>
+                    <p class="panel-description">Platform comparison</p>
+                </div>
+                <div id="battleground-view" class="view-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading 953 songs...</p>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="src/js/universe.js"></script>
+    <script src="src/js/fingerprint.js"></script>
+    <script src="src/js/battleground.js"></script>
+    <script src="src/js/main.js"></script>
+</body>
+</html>
